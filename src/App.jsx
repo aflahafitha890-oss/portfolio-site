@@ -1,263 +1,411 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-/** ====== Color palette (earlier one) ====== */
+/* ====== Color System (same palette as before) ====== */
 const COLORS = {
   dark: "#1c1b1a",
   paper: "#2a2726",
   light: "#f4f3ee",
   accent: "#e0afa0",
-  muted: "#8c8b81",
+  muted: "#bcb8b1",
   soft: "#8a817c",
 };
 
-function CursorDot() {
-  const dotRef = useRef(null);
+/* ====== tiny utility ====== */
+function cn(...a) {
+  return a.filter(Boolean).join(" ");
+}
 
-  useEffect(() => {
-    const el = dotRef.current;
-    if (!el) return;
+/* ====== Brand ====== */
+function BrandLogo({ size = 44, showText = true }) {
+  return (
+    <div className="flex items-center gap-3 select-none">
+      <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true" className="block">
+        <path
+          d="M18 14v36l28-18z"
+          fill="none"
+          stroke={COLORS.accent}
+          strokeWidth="6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+      {showText && (
+        <span
+          className="font-extrabold tracking-tight"
+          style={{ color: COLORS.accent, fontSize: "1.25rem" }}
+        >
+          M. aflah
+        </span>
+      )}
+    </div>
+  );
+}
 
-    const move = (e) => {
-      const x = e.clientX;
-      const y = e.clientY;
-      el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-    };
-    window.addEventListener("mousemove", move);
-    return () => window.removeEventListener("mousemove", move);
-  }, []);
+/* ====== Buttons (bigger) ====== */
+function Button({
+  children,
+  variant = "accent",
+  size = "lg",
+  as = "a",
+  href = "#",
+  className,
+  style,
+  ...props
+}) {
+  const Comp = as;
+  const sizes = {
+    sm: "h-9 px-4 text-sm",
+    md: "h-11 px-5 text-base",
+    lg: "h-12 px-6 text-base",
+    xl: "h-14 px-7 text-lg",
+  };
+  let styles = { ...style };
+  if (variant === "accent")
+    styles = { backgroundColor: COLORS.accent, color: "#2b211c", ...styles };
+  if (variant === "outline")
+    styles = { border: `1px solid ${COLORS.accent}`, color: COLORS.light, background: "transparent", ...styles };
+  if (variant === "ghost") styles = { color: COLORS.light, background: "transparent", ...styles };
 
+  return (
+    <Comp
+      href={href}
+      className={cn(
+        "btn-interactive inline-flex items-center justify-center rounded-2xl font-semibold shadow-md active:translate-y-[1px] transition-transform",
+        sizes[size],
+        className
+      )}
+      style={styles}
+      {...props}
+    >
+      {children}
+    </Comp>
+  );
+}
+
+/* ====== Card bits ====== */
+function Card({ className, children }) {
   return (
     <div
-      ref={dotRef}
-      aria-hidden="true"
-      style={{
-        position: "fixed",
-        left: 0,
-        top: 0,
-        width: 8,
-        height: 8,
-        borderRadius: 9999,
-        background: COLORS.accent,
-        pointerEvents: "none",
-        transform: "translate3d(-20px, -20px, 0)",
-        zIndex: 9999,
-      }}
-    />
-  );
-}
-
-function Button({ href = "#", children, variant = "primary" }) {
-  const base =
-    "no-underline inline-flex items-center justify-center h-12 md:h-12 px-6 md:px-7 rounded-2xl text-base font-semibold transition-transform active:translate-y-[1px]";
-  const styles =
-    variant === "primary"
-      ? {
-          class: "text-[#1b1816]",
-          style: { backgroundColor: COLORS.accent, color: "#1b1816" },
-        }
-      : {
-          class: "text-white",
-          style: {
-            backgroundColor: "transparent",
-            border: `1px solid ${COLORS.soft}`,
-            color: COLORS.light,
-          },
-        };
-
-  return (
-    <a href={href} className={`${base} ${styles.class}`} style={styles.style}>
-      {children}
-    </a>
-  );
-}
-
-function Nav() {
-  return (
-    <header
-      className="sticky top-0 z-40"
-      style={{
-        background: "rgba(28,27,26,0.7)",
-        backdropFilter: "blur(8px)",
-        borderBottom: `1px solid ${COLORS.paper}`,
-      }}
+      className={cn("rounded-2xl border", className)}
+      style={{ background: COLORS.paper, borderColor: "rgba(255,255,255,0.06)" }}
     >
-      <div className="mx-auto max-w-6xl h-16 px-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          {/* Brand mark + dot */}
-          <svg width="26" height="26" viewBox="0 0 64 64" aria-hidden="true">
-            <path d="M18 14v36l28-18z" fill={COLORS.accent} />
-          </svg>
-          <span className="font-semibold" style={{ color: COLORS.light }}>
-            M. aflah
-          </span>
-          <span
-            aria-hidden
-            style={{
-              width: 6,
-              height: 6,
-              borderRadius: 9999,
-              background: COLORS.accent,
-              display: "inline-block",
-              marginLeft: 6,
-            }}
-          />
-        </div>
+      {children}
+    </div>
+  );
+}
+function CardContent({ className, children }) {
+  return <div className={cn("p-6", className)}>{children}</div>;
+}
 
-        <nav
-          className="hidden md:flex items-center gap-8 text-sm"
-          style={{ color: COLORS.muted }}
-        >
-          <a className="no-underline" href="#work">
-            Work
-          </a>
-          <a className="no-underline" href="#about">
-            Expertise
-          </a>
-          <a className="no-underline" href="#results">
-            Results
-          </a>
-          <a className="no-underline" href="#pricing">
-            Pricing
-          </a>
-        </nav>
-
-        <Button href="#contact">Get in touch</Button>
-      </div>
-    </header>
+/* ====== Simple reveal-on-scroll ====== */
+function useReveal() {
+  const [ok, setOk] = useState(false);
+  const r = useRef(null);
+  useEffect(() => {
+    const el = r.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setOk(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return { r, ok };
+}
+function Reveal({ children }) {
+  const { r, ok } = useReveal();
+  return (
+    <div
+      ref={r}
+      className={cn(
+        "transition-all duration-700 will-change-transform",
+        ok ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+      )}
+    >
+      {children}
+    </div>
   );
 }
 
+/* ====== HERO ====== */
 function Hero() {
   return (
     <section
-      className="w-full"
-      style={{ background: COLORS.dark, borderBottom: `1px solid ${COLORS.paper}` }}
+      className="relative"
+      style={{ background: `linear-gradient(135deg, ${COLORS.dark}, #1a1918)`, color: COLORS.light }}
     >
-      <div className="mx-auto max-w-6xl px-4 py-12 md:py-16 grid md:grid-cols-2 gap-10 items-center">
-        {/* Left column (copy) */}
-        <div className="md:col-span-2">
-          <p
-            className="text-xs tracking-[0.18em] font-semibold mb-5"
-            style={{ color: COLORS.muted }}
-          >
-            THE #1 REMOTE VIDEO EDITING PARTNER
+      <div className="mx-auto max-w-6xl px-4 py-28 md:py-40 grid md:grid-cols-2 gap-14 items-center min-h-screen">
+        <div className="space-y-6">
+          <p className="uppercase tracking-[0.2em] text-xs sm:text-sm" style={{ color: COLORS.soft }}>
+            The #1 remote video editing partner
           </p>
-
           <h1
-            className="text-[32px] leading-[1.15] sm:text-5xl md:text-[56px] font-black"
+            className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight tracking-tight"
             style={{ color: COLORS.light }}
           >
             Stop wasting time on{" "}
-            <span style={{ color: COLORS.accent }}>mediocre edits</span>. Get
-            videos that actually convert.
+            <span style={{ color: "#9a7cff" }}>mediocre edits</span>. Get videos that actually convert.
           </h1>
 
-          <p className="mt-5 text-base sm:text-lg" style={{ color: COLORS.soft }}>
-            Before: Average editing, your time, your effort. After: a smooth,
-            fully-managed process focused on retention and results.
+          <p className="text-base sm:text-lg max-w-prose" style={{ color: COLORS.muted }}>
+            Before: average editing that costs time & results. After: a smooth, story-first edit focused on
+            retention & performance.
           </p>
 
-          <div className="mt-7 flex flex-wrap gap-4">
-            <Button href="#contact">Claim a free spot</Button>
-            <Button href="#work" variant="secondary">
+          <div className="flex flex-wrap gap-3">
+            <Button href="#contact" size="xl">
+              Claim a free spot
+            </Button>
+            <Button href="#work" variant="outline" size="xl">
               See work
             </Button>
           </div>
         </div>
+
+        {/* Right column intentionally empty now (no images). */}
+        <div className="hidden md:block" />
+      </div>
+
+      {/* scroll cue */}
+      <div
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 text-sm select-none"
+        style={{ color: COLORS.muted }}
+      >
+        ↓ Scroll down
       </div>
     </section>
   );
 }
 
-function Section({ id, title, children }) {
-  return (
-    <section
-      id={id}
-      className="mx-auto max-w-6xl px-4 py-12 md:py-16"
-      style={{ background: COLORS.dark }}
-    >
-      <h2
-        className="text-2xl sm:text-3xl font-bold mb-6"
-        style={{ color: COLORS.light }}
-      >
-        {title}
-      </h2>
-      {children}
-    </section>
-  );
-}
-
+/* ====== MAIN PAGE ====== */
 export default function App() {
+  const cursorRef = useRef(null);
+
+  useEffect(() => {
+    // hide native cursor everywhere
+    document.documentElement.style.cursor = "none";
+    document.body.style.cursor = "none";
+
+    // smooth dot follower
+    let targetX = 0,
+      targetY = 0,
+      x = 0,
+      y = 0,
+      raf = null;
+    const tick = () => {
+      x += (targetX - x) * 0.18;
+      y += (targetY - y) * 0.18;
+      const c = cursorRef.current;
+      if (c) {
+        c.style.setProperty("--x", String(x));
+        c.style.setProperty("--y", String(y));
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    const onMove = (e) => {
+      targetX = e.clientX;
+      targetY = e.clientY;
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
+    document.addEventListener("pointermove", onMove, { passive: true });
+
+    // enlarge dot on interactive hover
+    const selector = ".btn-interactive, a, button, [role='button'], iframe";
+    const isInteractive = (el) => !!(el && el.closest && el.closest(selector));
+    const onOver = (e) => {
+      if (!isInteractive(e.target)) return;
+      cursorRef.current?.classList.add("is-active");
+      e.target.closest(".btn-interactive")?.classList.add("is-hover");
+    };
+    const onOut = (e) => {
+      if (!isInteractive(e.target) || isInteractive(e.relatedTarget)) return;
+      cursorRef.current?.classList.remove("is-active");
+      e.target.closest(".btn-interactive")?.classList.remove("is-hover");
+    };
+    document.addEventListener("pointerover", onOver);
+    document.addEventListener("pointerout", onOut);
+
+    return () => {
+      document.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerover", onOver);
+      document.removeEventListener("pointerout", onOut);
+      if (raf) cancelAnimationFrame(raf);
+      document.documentElement.style.cursor = "";
+      document.body.style.cursor = "";
+    };
+  }, []);
+
   return (
-    <div style={{ background: COLORS.dark, color: COLORS.light }}>
-      <CursorDot />
-      <Nav />
+    <div className="min-h-screen relative" style={{ background: COLORS.dark, color: COLORS.light }}>
+      <style>{`
+        /* Only the dot cursor; hide underlines; keep it clean */
+        * { cursor: none !important; }
+        a { color: ${COLORS.accent}; text-decoration: none; }
+        a:hover { text-decoration: none; opacity:.95; }
+
+        .btn-interactive { transition: transform .18s ease, box-shadow .18s ease; }
+        .btn-interactive.is-hover { transform: scale(1.1); box-shadow:0 0 12px ${COLORS.accent}; }
+
+        /* dot cursor */
+        @keyframes idlePulse {
+          0%,100% { transform:translate3d(calc(var(--x,0)*1px - 50%), calc(var(--y,0)*1px - 50%), 0) scale(var(--s,1)); box-shadow:0 0 6px ${COLORS.accent}55 }
+          50%     { transform:translate3d(calc(var(--x,0)*1px - 50%), calc(var(--y,0)*1px - 50%), 0) scale(var(--s,1)); box-shadow:0 0 14px ${COLORS.accent}AA }
+        }
+        .cursor-dot {
+          position: fixed; left:0; top:0; width:10px; height:10px; border-radius:50%;
+          pointer-events:none; will-change:transform; z-index:2147483647;
+          background:${COLORS.accent};
+          animation: idlePulse 2s ease-in-out infinite;
+          transform: translate3d(-50%,-50%,0);
+        }
+        .cursor-dot.is-active { --s:1.6; box-shadow:0 0 12px ${COLORS.accent}, 0 0 24px ${COLORS.accent}AA }
+      `}</style>
+
+      {/* Header */}
+      <header
+        className="sticky top-0 z-50 border-b"
+        style={{
+          background: "rgba(32,30,29,0.7)",
+          backdropFilter: "blur(8px)",
+          borderColor: "rgba(255,255,255,0.08)",
+        }}
+      >
+        <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
+          <BrandLogo />
+          <nav className="hidden md:flex gap-6 text-sm">
+            <a href="#work">Work</a>
+            <a href="#testimonials">Feedback</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+          </nav>
+          <Button href="#contact" variant="accent" size="lg">
+            Get in touch
+          </Button>
+        </div>
+      </header>
+
+      {/* Big, scrollable hero */}
       <Hero />
 
-      <Section id="work" title="Selected Work">
-        <div
-          className="rounded-2xl overflow-hidden"
-          style={{
-            background: COLORS.paper,
-            border: `1px solid ${COLORS.paper}`,
-          }}
-        >
-          <iframe
-            className="w-full h-[315px] sm:h-[450px]"
-            src="https://www.youtube.com/embed/S841m3RpkFo"
-            title="Video"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-          />
-        </div>
-      </Section>
-
-      <Section id="about" title="About">
-        <p style={{ color: COLORS.soft }} className="max-w-prose">
-          I edit with a story-first approach: hook early, keep the pace tight, and
-          land the message. Clean sound, tasteful motion, and ruthless cuts.
-        </p>
-      </Section>
-
-      <Section id="contact" title="Contact">
-        <div
-          className="rounded-2xl p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6"
-          style={{
-            background: COLORS.paper,
-            border: `1px solid ${COLORS.paper}`,
-          }}
-        >
-          <div>
-            <h3 className="text-xl font-bold" style={{ color: COLORS.light }}>
-              Let’s make videos that convert.
-            </h3>
-            <p style={{ color: COLORS.muted }} className="text-sm mt-1">
-              Tell me your goal, deadline, and references.
-            </p>
+      {/* Work */}
+      <section id="work" className="mx-auto max-w-6xl px-4 py-20 md:py-28">
+        <Reveal>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-6">Selected Work</h2>
+        </Reveal>
+        <Reveal>
+          <div className="rounded-2xl overflow-hidden" style={{ boxShadow: "0 10px 30px rgba(0,0,0,0.35)" }}>
+            {/* Replace with your actual video link when ready */}
+            <iframe
+              className="w-full h-[315px] sm:h-[480px]"
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+              title="Video preview"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
           </div>
-          <div className="flex gap-3">
-            <Button href="mailto:you@example.com">Email</Button>
-            <Button href="#" variant="secondary">
-              WhatsApp
-            </Button>
-          </div>
-        </div>
-      </Section>
+        </Reveal>
+      </section>
 
+      {/* Testimonials */}
+      <section id="testimonials" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
+        <Reveal>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-6">Client Feedback</h2>
+        </Reveal>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            {
+              name: "John Doe",
+              role: "Marketing Manager",
+              feedback: "Clear comms and fast delivery. Strong sense of pacing.",
+            },
+            {
+              name: "Sarah Khan",
+              role: "YouTube Creator",
+              feedback: "Retention jumped. Edits felt tight and professional.",
+            },
+            { name: "Ali Reza", role: "Business Owner", feedback: "Reliable and easy to work with." },
+          ].map((t, i) => (
+            <Reveal key={i}>
+              <Card>
+                <CardContent>
+                  <p className="mb-4" style={{ color: COLORS.muted }}>
+                    &ldquo;{t.feedback}&rdquo;
+                  </p>
+                  <div>
+                    <p className="font-semibold">{t.name}</p>
+                    <p className="text-sm" style={{ color: COLORS.soft }}>
+                      {t.role}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* About */}
+      <section id="about" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
+        <Reveal>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-6">About</h2>
+        </Reveal>
+        <Reveal>
+          <p className="max-w-prose" style={{ color: COLORS.muted }}>
+            I edit videos with a story-first approach: keep viewers engaged, respect their time, and make the
+            message land.
+          </p>
+        </Reveal>
+      </section>
+
+      {/* Contact */}
+      <section id="contact" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
+        <Reveal>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-6">Contact</h2>
+        </Reveal>
+        <Card>
+          <CardContent className="p-6">
+            <div className="grid gap-4 md:grid-cols-2 md:items-center">
+              <div>
+                <h3 className="text-xl sm:text-2xl font-bold">Let’s build something that performs.</h3>
+                <p className="text-sm mt-1" style={{ color: COLORS.muted }}>
+                  Share the goal, format, deadline, and reference links.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-3 md:justify-end">
+                <Button href="mailto:you@example.com" variant="accent" size="lg">
+                  Email
+                </Button>
+                <Button href="#" variant="outline" size="lg">
+                  LinkedIn
+                </Button>
+                <Button href="#" variant="outline" size="lg">
+                  GitHub
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Footer */}
       <footer
         className="border-t"
-        style={{ borderColor: COLORS.paper, background: COLORS.dark }}
+        style={{ background: "rgba(32,30,29,0.7)", borderColor: "rgba(255,255,255,0.08)", color: COLORS.soft }}
       >
-        <div
-          className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between text-xs"
-          style={{ color: COLORS.muted }}
-        >
+        <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between text-xs">
           <span>© {new Date().getFullYear()} • M. aflah</span>
-          <a href="#top" className="no-underline" style={{ color: COLORS.light }}>
-            Back to top
-          </a>
+          <a href="#top">Back to top</a>
         </div>
       </footer>
+
+      {/* dot cursor on top */}
+      <div ref={cursorRef} className="cursor-dot" />
     </div>
   );
 }
