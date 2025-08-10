@@ -1,244 +1,182 @@
 import React from "react";
 
+// Light theme brand
 const COLORS = {
-  dark: "#1c1b1a",
-  paper: "#2a2726",
-  light: "#f4f3ee",
-  accent: "#e0afa0",
-  muted: "#bcb8b1",
-  soft: "#8a817c",
+  bg: "#F5F6F8",          // page background
+  text: "#0F1115",        // primary text
+  sub: "#3A3F47",         // secondary text
+  accent: "#6A5BFF",      // purple accent
+  card: "#FFFFFF",        // cards
+  stroke: "#E6E8EE",      // subtle borders
 };
 
-function cn(...a) { return a.filter(Boolean).join(" "); }
-
-function BrandLogo({ size = 44, showText = true }) {
-  return (
-    <div className="flex items-center gap-3 select-none">
-      <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true" className="block">
-        <path
-          d="M18 14v36l28-18z"
-          fill="none"
-          stroke={COLORS.accent}
-          strokeWidth="6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-      {showText && (
-        <span
-          className="font-extrabold tracking-tight"
-          style={{ color: COLORS.accent, fontSize: "1.1rem" }}
-        >
-          M. aflah
-        </span>
-      )}
-    </div>
-  );
-}
-
-function Button({ as = "a", href = "#", children, variant = "accent", className, style }) {
-  const Comp = as;
-  const styles = {
-    accent: {
-      backgroundColor: COLORS.accent,
-      color: "#2b211c",
-      boxShadow: "0 0 0 rgba(0,0,0,0)",
-    },
-    outline: {
-      border: `1px solid ${COLORS.accent}`,
-      color: COLORS.light,
-      background: "transparent",
-    },
-  }[variant];
+function Button({ href = "#", children, variant = "primary" }) {
+  const base =
+    "inline-flex items-center justify-center h-11 px-5 rounded-xl text-sm font-semibold transition-transform active:translate-y-[1px]";
+  const styles =
+    variant === "primary"
+      ? { class: "text-white", style: { backgroundColor: COLORS.accent } }
+      : { class: "text-" , style: { backgroundColor: "#fff", border: `1px solid ${COLORS.stroke}`, color: COLORS.text } };
 
   return (
-    <Comp
-      href={href}
-      className={cn(
-        "inline-flex items-center justify-center rounded-xl px-4 h-10 text-sm font-medium transition-all",
-        "hover:scale-[1.03] hover:shadow-[0_0_20px_rgba(224,175,160,0.25)] active:scale-[0.99]",
-        className
-      )}
-      style={{ ...styles, ...style }}
-    >
+    <a href={href} className={`${base} ${styles.class}`} style={styles.style}>
       {children}
-    </Comp>
+    </a>
   );
 }
 
-function Card({ children, className }) {
+function Nav() {
   return (
-    <div
-      className={cn("rounded-2xl border", className)}
-      style={{ background: COLORS.paper, borderColor: "rgba(255,255,255,0.06)" }}
+    <header
+      className="sticky top-0 z-40 border-b"
+      style={{ borderColor: COLORS.stroke, background: "rgba(255,255,255,0.7)", backdropFilter: "blur(8px)" }}
     >
-      {children}
-    </div>
+      <div className="mx-auto max-w-6xl h-16 px-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <svg width="28" height="28" viewBox="0 0 64 64" aria-hidden="true">
+            <path d="M18 14v36l28-18z" fill={COLORS.accent} />
+          </svg>
+          <span className="font-bold" style={{ color: COLORS.text }}>M. aflah</span>
+        </div>
+        <nav className="hidden md:flex items-center gap-8 text-sm" style={{ color: COLORS.sub }}>
+          <a href="#work">Video Types</a>
+          <a href="#about">Expertise</a>
+          <a href="#results">Results</a>
+          <a href="#pricing">Pricing</a>
+        </nav>
+        <Button href="#contact">Get in touch</Button>
+      </div>
+    </header>
   );
 }
-function CardContent({ children, className }) {
-  return <div className={cn("p-5", className)}>{children}</div>;
+
+function Hero() {
+  return (
+    <section
+      className="w-full"
+      style={{ background: COLORS.bg, borderBottom: `1px solid ${COLORS.stroke}` }}
+    >
+      <div className="mx-auto max-w-6xl px-4 py-12 md:py-16 grid md:grid-cols-2 gap-10 items-center">
+        {/* Left copy */}
+        <div>
+          <p className="text-xs tracking-[0.18em] font-semibold mb-5" style={{ color: COLORS.sub }}>
+            THE #1 REMOTE VIDEO EDITING PARTNER
+          </p>
+          <h1
+            className="text-[34px] leading-[1.1] sm:text-5xl md:text-[56px] font-black"
+            style={{ color: COLORS.text }}
+          >
+            Stop wasting time on{" "}
+            <span style={{ color: COLORS.accent }}>mediocre edits</span>. Get videos
+            that actually convert.
+          </h1>
+
+          <p className="mt-6 text-base sm:text-lg" style={{ color: COLORS.sub }}>
+            Before: Average editing, your time, your effort. After: a smooth,
+            fully-managed process focused on retention and results.
+          </p>
+
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Button href="#contact">Claim a free spot</Button>
+            <Button href="#work" variant="secondary">See work</Button>
+          </div>
+        </div>
+
+        {/* Right collage */}
+        <div className="grid grid-cols-2 gap-4">
+          {[
+            "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1504384764586-bb4cdc1707b0?q=80&w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1529336953121-ad5a0d43d0d2?q=80&w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1526178611896-80f2b81aa5a2?q=80&w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1495562569060-2eec283d3391?q=80&w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1536240478700-b869070f9279?q=80&w=800&auto=format&fit=crop",
+          ].map((src, i) => (
+            <div
+              key={i}
+              className="aspect-[4/3] rounded-2xl overflow-hidden border"
+              style={{ borderColor: COLORS.stroke, background: COLORS.card }}
+            >
+              <img
+                src={src}
+                alt=""
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Section({ id, title, children }) {
+  return (
+    <section id={id} className="mx-auto max-w-6xl px-4 py-12 md:py-16">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-6" style={{ color: COLORS.text }}>
+        {title}
+      </h2>
+      {children}
+    </section>
+  );
 }
 
 export default function App() {
   return (
-    <div
-      className="min-h-screen"
-      style={{
-        background: `radial-gradient(1200px 600px at 10% -10%, rgba(224,175,160,0.12), transparent), radial-gradient(900px 500px at 100% 0%, rgba(188,184,177,0.10), transparent), ${COLORS.dark}`,
-        color: COLORS.light,
-      }}
-    >
-      {/* Header */}
-      <header
-        className="sticky top-0 z-40 border-b"
-        style={{
-          background: "rgba(32,30,29,0.6)",
-          backdropFilter: "blur(8px)",
-          borderColor: "rgba(255,255,255,0.08)",
-        }}
-      >
-        <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
-          <BrandLogo />
-          <nav className="hidden md:flex gap-6 text-sm">
-            <a href="#work" style={{ color: COLORS.muted }}>Work</a>
-            <a href="#testimonials" style={{ color: COLORS.muted }}>Feedback</a>
-            <a href="#about" style={{ color: COLORS.muted }}>About</a>
-            <a href="#contact" style={{ color: COLORS.muted }}>Contact</a>
-          </nav>
-          <Button href="#contact" variant="accent">Get in touch</Button>
-        </div>
-      </header>
+    <div style={{ background: COLORS.bg, color: COLORS.text }}>
+      <Nav />
+      <Hero />
 
-      {/* Hero */}
-      <section className="mx-auto max-w-6xl px-4 py-16">
-        <h1
-          className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight tracking-tight"
-          style={{
-            background: `linear-gradient(90deg, ${COLORS.light}, ${COLORS.accent})`,
-            WebkitBackgroundClip: "text",
-            color: "transparent",
-          }}
+      <Section id="work" title="Selected Work">
+        <div
+          className="rounded-2xl overflow-hidden border"
+          style={{ borderColor: COLORS.stroke, background: COLORS.card }}
         >
-          I edit videos that keep people watching.
-        </h1>
-        <p className="mt-4 max-w-prose" style={{ color: COLORS.muted }}>
-          Straight edits, clean sound, tight pacing. Real impact, no fluff.
-        </p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Button href="#work">See my work</Button>
-          <Button href="mailto:you@example.com" variant="outline">Email me</Button>
+          <iframe
+            className="w-full h-[315px] sm:h-[450px]"
+            src="https://www.youtube.com/embed/S841m3RpkFo"
+            title="Video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
         </div>
-      </section>
+      </Section>
 
-      {/* Work */}
-      <section id="work" className="mx-auto max-w-6xl px-4 pb-12">
-        <h2 className="text-2xl sm:text-3xl font-bold mb-6">Selected Work</h2>
-        <Card>
-          <CardContent className="p-0">
-            <div className="rounded-2xl overflow-hidden">
-              <iframe
-                className="w-full h-[315px] sm:h-[450px]"
-                src="https://www.youtube.com/embed/S841m3RpkFo"
-                title="Video preview"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                style={{ border: "0" }}
-              />
-            </div>
-          </CardContent>
-        </Card>
-      </section>
-
-      {/* Testimonials */}
-      <section id="testimonials" className="mx-auto max-w-6xl px-4 pb-12">
-        <h2 className="text-2xl sm:text-3xl font-bold mb-6">Client Feedback</h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {[
-            {
-              name: "John Doe",
-              role: "Marketing Manager",
-              feedback:
-                "Clear comms and fast delivery. Strong sense of pacing.",
-            },
-            {
-              name: "Sarah Khan",
-              role: "YouTube Creator",
-              feedback:
-                "Retention jumped. Edits felt tight and professional.",
-            },
-            {
-              name: "Ali Reza",
-              role: "Business Owner",
-              feedback: "Reliable and easy to work with.",
-            },
-          ].map((t, i) => (
-            <Card key={i}>
-              <CardContent>
-                <p className="mb-4" style={{ color: COLORS.muted }}>
-                  “{t.feedback}”
-                </p>
-                <p className="font-semibold">{t.name}</p>
-                <p className="text-sm" style={{ color: COLORS.soft }}>
-                  {t.role}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* About */}
-      <section id="about" className="mx-auto max-w-6xl px-4 pb-12">
-        <h2 className="text-2xl sm:text-3xl font-bold mb-4">About</h2>
-        <p className="max-w-prose" style={{ color: COLORS.muted }}>
-          I edit videos with a story-first approach: keep viewers engaged, respect their time,
-          and make the message land.
+      <Section id="about" title="About">
+        <p style={{ color: COLORS.sub }} className="max-w-prose">
+          I edit with a story-first approach: hook early, keep the pace tight, and
+          land the message. Clean sound, tasteful motion, and ruthless cuts.
         </p>
-      </section>
+      </Section>
 
-      {/* Contact */}
-      <section id="contact" className="mx-auto max-w-6xl px-4 pb-16">
-        <h2 className="text-2xl sm:text-3xl font-bold mb-4">Contact</h2>
-        <Card>
-          <CardContent className="p-6">
-            <div className="grid gap-4 md:grid-cols-2 md:items-center">
-              <div>
-                <h3 className="text-xl sm:text-2xl font-bold">
-                  Let’s build something that performs.
-                </h3>
-                <p className="text-sm mt-1" style={{ color: COLORS.muted }}>
-                  Share the goal, format, deadline, and reference links.
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-3 md:justify-end">
-                <Button href="mailto:you@example.com" variant="accent">
-                  Email
-                </Button>
-                <Button href="#" variant="outline">
-                  LinkedIn
-                </Button>
-                <Button href="#" variant="outline">
-                  GitHub
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </section>
+      <Section id="contact" title="Contact">
+        <div
+          className="rounded-2xl border p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6"
+          style={{ background: COLORS.card, borderColor: COLORS.stroke }}
+        >
+          <div>
+            <h3 className="text-xl font-bold" style={{ color: COLORS.text }}>
+              Let’s make videos that convert.
+            </h3>
+            <p style={{ color: COLORS.sub }} className="text-sm mt-1">
+              Tell me your goal, deadline, and references.
+            </p>
+          </div>
+          <div className="flex gap-3">
+            <Button href="mailto:you@example.com">Email</Button>
+            <Button href="#" variant="secondary">WhatsApp</Button>
+          </div>
+        </div>
+      </Section>
 
-      {/* Footer */}
       <footer
         className="border-t"
-        style={{
-          background: "rgba(32,30,29,0.6)",
-          borderColor: "rgba(255,255,255,0.08)",
-          color: COLORS.soft,
-        }}
+        style={{ borderColor: COLORS.stroke, background: "#fff" }}
       >
-        <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between text-xs">
+        <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between text-xs" style={{ color: COLORS.sub }}>
           <span>© {new Date().getFullYear()} • M. aflah</span>
-          <a href="#top">Back to top</a>
+          <a href="#top" style={{ color: COLORS.text }}>Back to top</a>
         </div>
       </footer>
     </div>
