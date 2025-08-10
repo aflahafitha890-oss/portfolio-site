@@ -1,3 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Hide the default cursor everywhere */
+* { cursor: none; }
+
+/* Make sure links never show default underlines */
+a { text-decoration: none; }
