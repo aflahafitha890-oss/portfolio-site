@@ -36,15 +36,17 @@ export default function App(){
 
   return (
     <div style={{ cursor:"none" }}>
+      
       {/* ===== Header ===== */}
       <header className="header">
         <div className="container nav">
+          
           {/* left: logo */}
-          <div className="logo">
-            <svg width="36" height="36" viewBox="0 0 64 64" aria-hidden="true">
+          <div className="logo" style={{display: "flex", alignItems: "center", gap: "8px"}}>
+            <svg width="32" height="32" viewBox="0 0 64 64" aria-hidden="true" style={{flexShrink: 0}}>
               <path d="M18 14v36l28-18z" fill="none" stroke="var(--accent)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            <span>M. aflah</span>
+            <span style={{fontSize: "1rem", fontWeight: 600}}>M. aflah</span>
           </div>
 
           {/* center: links (hidden on mobile via CSS) */}
@@ -57,7 +59,7 @@ export default function App(){
 
           {/* right: CTA + hamburger */}
           <div className="actions">
-            <a href="#contact" className="btn btn--accent cta">Get in touch</a>
+            <a href="#contact" className="btn btn--accent cta" style={{padding: "6px 14px", fontSize: "0.9rem"}}>Get in touch</a>
             <button
               className="hamburger"
               aria-label="Open menu"
@@ -77,11 +79,11 @@ export default function App(){
         <div className="menu" role="dialog" aria-modal="true">
           <div className="menu__panel">
             <div className="menu__head">
-              <div className="logo">
-                <svg width="28" height="28" viewBox="0 0 64 64" aria-hidden="true">
+              <div className="logo" style={{display: "flex", alignItems: "center", gap: "8px"}}>
+                <svg width="28" height="28" viewBox="0 0 64 64" aria-hidden="true" style={{flexShrink: 0}}>
                   <path d="M18 14v36l28-18z" fill="none" stroke="var(--accent)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                <span>M. aflah</span>
+                <span style={{fontSize: "1rem", fontWeight: 600}}>M. aflah</span>
               </div>
               <button className="menu__close" aria-label="Close menu" onClick={()=>setOpen(false)}>✕</button>
             </div>
