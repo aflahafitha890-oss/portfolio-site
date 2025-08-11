@@ -1,5 +1,70 @@
-/* Hide the default cursor everywhere */
-* { cursor: none; }
+/* ===== Theme ===== */
+:root{
+  --bg:#141312;
+  --panel:#1f1d1c;
+  --text:#f4f3ee;
+  --muted:#bcb8b1;
+  --soft:#8a817c;
+  --accent:#e0afa0;
+}
 
-/* Make sure links never show default underlines */
-a { text-decoration: none; }
+/* ===== Reset / Base ===== */
+*{ box-sizing:border-box }
+html,body,#root{ height:100% }
+html,body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+a{ color:var(--accent); text-decoration:none }
+a:hover{ text-decoration:underline; text-underline-offset:4px }
+
+/* ===== Layout ===== */
+.container{ max-width:1120px; margin-inline:auto; padding:0 20px }
+.section{ padding:56px 0 }
+.h1{ font-weight:900; line-height:1.12; letter-spacing:-.01em }
+.h2{ font-weight:800; line-height:1.2 }
+.copy{ color:var(--muted) }
+
+/* ===== Components ===== */
+.card{
+  background:var(--panel);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:18px;
+  overflow:hidden;
+}
+
+/* Large CTA buttons */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  border-radius:18px; padding:16px 26px;
+  font-weight:800; font-size:18px;
+  box-shadow:0 10px 28px rgba(0,0,0,.35);
+  transition:.18s ease; user-select:none; gap:10px; text-decoration:none;
+}
+.btn:hover{ transform:scale(1.06) }
+.btn:active{ transform:scale(1.02) }
+.btn--accent{ background:var(--accent); color:#2b211c }
+.btn--outline{ background:transparent; color:var(--text); border:2px solid var(--accent) }
+
+/* Sticky header */
+.header{
+  position:sticky; top:0; z-index:50;
+  background:rgba(32,30,29,.72);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+/* Simple nav */
+.nav a{ color:var(--text); margin-left:24px }
+
+/* Video wrapper */
+.vid{
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 16px 40px rgba(0,0,0,.35);
+}
