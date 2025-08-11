@@ -241,6 +241,14 @@ img{max-width:100%; display:block}
   .links{display:none}
   .hamburger{display:grid}
 }
+/* --- Only shrink the header CTA on phones --- */
+@media (max-width: 900px) {
+  .cta {
+    padding: 8px 14px;   /* smaller padding */
+    font-size: 14px;     /* smaller text */
+    border-radius: 12px; /* slightly tighter radius */
+  }
+}
 
 /* Very small phones */
 @media (max-width: 360px){
